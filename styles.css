@@ -2878,22 +2878,23 @@ svg {
 @media (max-width: 479px) {
   .header {
     padding: 0 var(--space-2);
+    padding-right: 120px; /* Оставляем место для кнопок справа */
   }
   
   .header-content {
     grid-template-columns: 1fr;
     grid-template-rows: auto auto;
     gap: var(--space-2);
-    text-align: center;
+    text-align: left; /* Выравнивание по левому краю */
   }
   
   .header-left {
-    justify-self: center;
+    justify-self: start; /* Выравнивание по левому краю */
     order: 1;
   }
   
   .header-center {
-    justify-self: center;
+    justify-self: start; /* Выравнивание по левому краю */
     order: 2;
     font-size: var(--font-size-xs);
   }
