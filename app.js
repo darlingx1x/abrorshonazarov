@@ -592,6 +592,7 @@ class MarkdownEditor {
    * Handle editor input with debouncing
    */
   handleEditorInput(content) {
+    // Update state immediately for counters
     this.setState({ content });
     
     // Debounce preview updates to prevent infinite loops
@@ -612,17 +613,28 @@ class MarkdownEditor {
       lines: content.split('\n').length
     };
     
+    console.log('Updating counters:', counters, 'Content:', content);
+    
     this.setState({ counters });
     
     // Update UI
     if (this.elements.charCount) {
       this.elements.charCount.textContent = counters.characters;
+      console.log('Updated char count element:', counters.characters);
+    } else {
+      console.warn('charCount element not found');
     }
     if (this.elements.wordCount) {
       this.elements.wordCount.textContent = counters.words;
+      console.log('Updated word count element:', counters.words);
+    } else {
+      console.warn('wordCount element not found');
     }
     if (this.elements.lineCount) {
       this.elements.lineCount.textContent = counters.lines;
+      console.log('Updated line count element:', counters.lines);
+    } else {
+      console.warn('lineCount element not found');
     }
   }
 

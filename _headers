@@ -1,0 +1,21 @@
+# Headers for Render static site
+/*
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+
+# JavaScript files
+/*.js
+  Content-Type: application/javascript; charset=utf-8
+
+# CSS files  
+/*.css
+  Content-Type: text/css; charset=utf-8
+
+# HTML files
+/*.html
+  Content-Type: text/html; charset=utf-8
+
+# Root HTML
+/
+  Content-Type: text/html; charset=utf-8

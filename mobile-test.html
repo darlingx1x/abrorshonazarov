@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Test - Markdown Editor</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Test viewport sizes */
+        .test-container {
+            border: 2px solid #3b82f6;
+            margin: 10px;
+            position: relative;
+        }
+        
+        .test-label {
+            position: absolute;
+            top: -10px;
+            left: 10px;
+            background: #3b82f6;
+            color: white;
+            padding: 2px 8px;
+            font-size: 12px;
+            border-radius: 4px;
+        }
+        
+        .size-320 { width: 320px; }
+        .size-360 { width: 360px; }
+        .size-480 { width: 480px; }
+        .size-640 { width: 640px; }
+        
+        body {
+            padding: 20px;
+            background: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Mobile Responsive Test</h1>
+    
+    <!-- 320px - Very small mobile -->
+    <div class="test-container size-320">
+        <div class="test-label">320px - Very Small Mobile</div>
+        <div class="app" style="display: grid; height: 400px;">
+            <header class="header">
+                <div class="header-content">
+                    <div class="header-left">
+                        <h1 class="app-title">Markdown Editor</h1>
+                        <span class="variant-badge">Вариант 17</span>
+                    </div>
+                    <div class="header-center">
+                        <span class="author-info">Шоназаров Аброр • 085 23</span>
+                    </div>
+                    <div class="header-right">
+                        <button class="theme-toggle">🌙</button>
+                        <button class="help-button">?</button>
+                        <button class="about-button">ℹ</button>
+                    </div>
+                </div>
+            </header>
+            
+            <div class="editor-panel">
+                <div class="editor-header">
+                    <h2 class="panel-title">Редактор</h2>
+                    <div class="editor-stats">
+                        <span class="stat" aria-label="Символов">
+                            <span>25</span> символов
+                        </span>
+                        <span class="stat" aria-label="Слов">
+                            <span>5</span> слов
+                        </span>
+                        <span class="stat" aria-label="Строк">
+                            <span>3</span> строк
+                        </span>
+                    </div>
+                </div>
+            </div>
+            
+            <footer class="footer">
+                <div class="footer-content">
+                    <div class="footer-left">
+                        <span class="footer-text">© 2026 Markdown Editor</span>
+                    </div>
+                    <div class="footer-center">
+                        <span class="footer-author">Автор: Шоназаров Аброр • Группа: 085 23</span>
+                    </div>
+                    <div class="footer-right">
+                        <span class="footer-variant">Вариант 17</span>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+    
+    <!-- 360px - Small mobile -->
+    <div class="test-container size-360">
+        <div class="test-label">360px - Small Mobile</div>
+        <div class="app" style="display: grid; height: 400px;">
+            <header class="header">
+                <div class="header-content">
+                    <div class="header-left">
+                        <h1 class="app-title">Markdown Editor</h1>
+                        <span class="variant-badge">Вариант 17</span>
+                    </div>
+                    <div class="header-center">
+                        <span class="author-info">Шоназаров Аброр • 085 23</span>
+                    </div>
+                    <div class="header-right">
+                        <button class="theme-toggle">🌙</button>
+                        <button class="help-button">?</button>
+                        <button class="about-button">ℹ</button>
+                    </div>
+                </div>
+            </header>
+            
+            <div class="editor-panel">
+                <div class="editor-header">
+                    <h2 class="panel-title">Редактор</h2>
+                    <div class="editor-stats">
+                        <span class="stat" aria-label="Символов">
+                            <span>25</span> символов
+                        </span>
+                        <span class="stat" aria-label="Слов">
+                            <span>5</span> слов
+                        </span>
+                        <span class="stat" aria-label="Строк">
+                            <span>3</span> строк
+                        </span>
+                    </div>
+                </div>
+            </div>
+            
+            <footer class="footer">
+                <div class="footer-content">
+                    <div class="footer-left">
+                        <span class="footer-text">© 2026 Markdown Editor</span>
+                    </div>
+                    <div class="footer-center">
+                        <span class="footer-author">Автор: Шоназаров Аброр • Группа: 085 23</span>
+                    </div>
+                    <div class="footer-right">
+                        <span class="footer-variant">Вариант 17</span>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+    
+    <!-- 480px - Medium mobile -->
+    <div class="test-container size-480">
+        <div class="test-label">480px - Medium Mobile</div>
+        <div class="app" style="display: grid; height: 400px;">
+            <header class="header">
+                <div class="header-content">
+                    <div class="header-left">
+                        <h1 class="app-title">Markdown Editor</h1>
+                        <span class="variant-badge">Вариант 17</span>
+                    </div>
+                    <div class="header-center">
+                        <span class="author-info">Шоназаров Аброр • 085 23</span>
+                    </div>
+                    <div class="header-right">
+                        <button class="theme-toggle">🌙</button>
+                        <button class="help-button">?</button>
+                        <button class="about-button">ℹ</button>
+                    </div>
+                </div>
+            </header>
+            
+            <div class="editor-panel">
+                <div class="editor-header">
+                    <h2 class="panel-title">Редактор</h2>
+                    <div class="editor-stats">
+                        <span class="stat" aria-label="Символов">
+                            <span>25</span> символов
+                        </span>
+                        <span class="stat" aria-label="Слов">
+                            <span>5</span> слов
+                        </span>
+                        <span class="stat" aria-label="Строк">
+                            <span>3</span> строк
+                        </span>
+                    </div>
+                </div>
+            </div>
+            
+            <footer class="footer">
+                <div class="footer-content">
+                    <div class="footer-left">
+                        <span class="footer-text">© 2026 Markdown Editor</span>
+                    </div>
+                    <div class="footer-center">
+                        <span class="footer-author">Автор: Шоназаров Аброр • Группа: 085 23</span>
+                    </div>
+                    <div class="footer-right">
+                        <span class="footer-variant">Вариант 17</span>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+    
+    <!-- 640px - Large mobile -->
+    <div class="test-container size-640">
+        <div class="test-label">640px - Large Mobile</div>
+        <div class="app" style="display: grid; height: 400px;">
+            <header class="header">
+                <div class="header-content">
+                    <div class="header-left">
+                        <h1 class="app-title">Markdown Editor</h1>
+                        <span class="variant-badge">Вариант 17</span>
+                    </div>
+                    <div class="header-center">
+                        <span class="author-info">Шоназаров Аброр • 085 23</span>
+                    </div>
+                    <div class="header-right">
+                        <button class="theme-toggle">🌙</button>
+                        <button class="help-button">?</button>
+                        <button class="about-button">ℹ</button>
+                    </div>
+                </div>
+            </header>
+            
+            <div class="editor-panel">
+                <div class="editor-header">
+                    <h2 class="panel-title">Редактор</h2>
+                    <div class="editor-stats">
+                        <span class="stat" aria-label="Символов">
+                            <span>25</span> символов
+                        </span>
+                        <span class="stat" aria-label="Слов">
+                            <span>5</span> слов
+                        </span>
+                        <span class="stat" aria-label="Строк">
+                            <span>3</span> строк
+                        </span>
+                    </div>
+                </div>
+            </div>
+            
+            <footer class="footer">
+                <div class="footer-content">
+                    <div class="footer-left">
+                        <span class="footer-text">© 2026 Markdown Editor</span>
+                    </div>
+                    <div class="footer-center">
+                        <span class="footer-author">Автор: Шоназаров Аброр • Группа: 085 23</span>
+                    </div>
+                    <div class="footer-right">
+                        <span class="footer-variant">Вариант 17</span>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+    
+    <script>
+        // Test counter functionality
+        console.log('Mobile test page loaded');
+        
+        // Simulate different screen sizes
+        function testScreenSize(width) {
+            document.body.style.width = width + 'px';
+            console.log('Testing screen width:', width);
+        }
+        
+        // Add buttons to test different sizes
+        const controls = document.createElement('div');
+        controls.innerHTML = `
+            <h2>Test Controls</h2>
+            <button onclick="testScreenSize(320)">320px</button>
+            <button onclick="testScreenSize(360)">360px</button>
+            <button onclick="testScreenSize(480)">480px</button>
+            <button onclick="testScreenSize(640)">640px</button>
+            <button onclick="testScreenSize(768)">768px</button>
+        `;
+        controls.style.cssText = 'position: fixed; top: 10px; right: 10px; background: white; padding: 10px; border: 1px solid #ccc; border-radius: 5px; z-index: 1000;';
+        document.body.appendChild(controls);
+    </script>
+</body>
+</html>

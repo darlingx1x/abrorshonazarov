@@ -2871,3 +2871,354 @@ svg {
 .about-modal-content {
   animation: modalSlideIn 0.3s ease-out;
 }
+
+/* ===== MOBILE RESPONSIVE FIXES ===== */
+
+/* Mobile header optimizations */
+@media (max-width: 479px) {
+  .header {
+    padding: 0 var(--space-2);
+  }
+  
+  .header-content {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    gap: var(--space-2);
+    text-align: center;
+  }
+  
+  .header-left {
+    justify-self: center;
+    order: 1;
+  }
+  
+  .header-center {
+    justify-self: center;
+    order: 2;
+    font-size: var(--font-size-xs);
+  }
+  
+  .header-right {
+    position: absolute;
+    top: var(--space-2);
+    right: var(--space-2);
+    gap: var(--space-1);
+  }
+  
+  .app-title {
+    font-size: var(--font-size-lg);
+  }
+  
+  .variant-badge {
+    font-size: 0.625rem; /* 10px */
+    padding: 2px 6px;
+  }
+  
+  .author-info {
+    font-size: var(--font-size-xs);
+    white-space: nowrap;
+  }
+  
+  /* Compact header buttons */
+  .theme-toggle,
+  .help-button,
+  .about-button,
+  .fullscreen-btn {
+    width: 2rem;
+    height: 2rem;
+  }
+}
+
+/* Small mobile screens */
+@media (max-width: 359px) {
+  .header-center .author-info {
+    display: none; /* Hide author info on very small screens */
+  }
+  
+  .header-left {
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+  
+  .app-title {
+    font-size: var(--font-size-base);
+  }
+}
+
+/* Medium mobile screens */
+@media (min-width: 480px) and (max-width: 639px) {
+  .header-content {
+    grid-template-columns: auto 1fr auto;
+    grid-template-rows: auto;
+  }
+  
+  .header-left {
+    order: 1;
+    justify-self: start;
+  }
+  
+  .header-center {
+    order: 2;
+    justify-self: center;
+  }
+  
+  .header-right {
+    position: static;
+    order: 3;
+    justify-self: end;
+  }
+  
+  .author-info {
+    font-size: var(--font-size-sm);
+  }
+}
+
+/* Mobile footer optimizations */
+@media (max-width: 639px) {
+  .footer-content {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    gap: var(--space-1);
+    text-align: center;
+  }
+  
+  .footer-left,
+  .footer-center,
+  .footer-right {
+    justify-self: center;
+  }
+  
+  .footer-text,
+  .footer-author,
+  .footer-variant {
+    font-size: 0.625rem; /* 10px */
+  }
+}
+
+/* Very small screens - ultra compact footer */
+@media (max-width: 359px) {
+  .footer-content {
+    grid-template-rows: auto auto;
+  }
+  
+  .footer-left {
+    display: none; /* Hide copyright on very small screens */
+  }
+  
+  .footer-center {
+    order: 1;
+  }
+  
+  .footer-right {
+    order: 2;
+  }
+  
+  /* Abbreviate author name for very small screens */
+  .footer-author {
+    font-size: 0;
+  }
+  
+  .footer-author::before {
+    content: "А. Шоназаров • 085 23";
+    font-size: 0.625rem;
+  }
+}
+
+/* Mobile stats display optimizations */
+@media (max-width: 639px) {
+  .editor-stats {
+    gap: var(--space-3);
+    padding: var(--space-1) var(--space-3);
+  }
+  
+  .stat {
+    font-size: 0.625rem; /* 10px */
+  }
+  
+  .stat span {
+    font-weight: var(--font-weight-bold);
+  }
+}
+
+/* Ultra compact stats for very small screens */
+@media (max-width: 359px) {
+  .editor-stats {
+    gap: var(--space-2);
+    padding: var(--space-1) var(--space-2);
+  }
+  
+  /* Replace text with abbreviated versions */
+  .stat[aria-label="Символов"] {
+    font-size: 0;
+  }
+  
+  .stat[aria-label="Символов"]::after {
+    content: " сим";
+    font-size: 0.625rem;
+  }
+  
+  .stat[aria-label="Слов"] {
+    font-size: 0;
+  }
+  
+  .stat[aria-label="Слов"]::after {
+    content: " сл";
+    font-size: 0.625rem;
+  }
+  
+  .stat[aria-label="Строк"] {
+    font-size: 0;
+  }
+  
+  .stat[aria-label="Строк"]::after {
+    content: " стр";
+    font-size: 0.625rem;
+  }
+  
+  /* Keep numbers visible */
+  .stat span {
+    font-size: 0.625rem !important;
+  }
+}
+
+/* Mobile toolbar optimizations */
+@media (max-width: 639px) {
+  .toolbar {
+    padding: 0 var(--space-2);
+    gap: var(--space-1);
+  }
+  
+  .toolbar-section {
+    gap: 2px;
+  }
+  
+  .toolbar-btn {
+    width: 1.75rem;
+    height: 1.75rem;
+  }
+  
+  .toolbar-divider {
+    height: 1.25rem;
+  }
+}
+
+/* Mobile view controls */
+@media (max-width: 767px) {
+  .view-controls {
+    padding: 0 var(--space-2);
+  }
+  
+  .view-btn {
+    padding: var(--space-1) var(--space-2);
+    font-size: var(--font-size-xs);
+  }
+  
+  .view-label {
+    display: none;
+  }
+  
+  /* Default to editor mode on mobile */
+  .editor-container {
+    grid-template-columns: 1fr;
+  }
+  
+  .editor-container.view-split .preview-panel {
+    display: none;
+  }
+}
+
+/* Touch target improvements */
+@media (max-width: 767px) {
+  .toolbar-btn,
+  .view-btn,
+  .theme-toggle,
+  .help-button,
+  .about-button {
+    min-width: 44px;
+    min-height: 44px;
+    touch-action: manipulation;
+  }
+  
+  /* Improve button spacing for touch */
+  .header-right {
+    gap: var(--space-3);
+  }
+  
+  .toolbar-section {
+    gap: var(--space-2);
+  }
+}
+
+/* Mobile modal optimizations */
+@media (max-width: 639px) {
+  .modal-content {
+    margin: var(--space-4);
+    max-height: calc(100vh - 2rem);
+    border-radius: var(--radius-lg);
+  }
+  
+  .modal-body {
+    padding: var(--space-4);
+    max-height: calc(100vh - 8rem);
+    overflow-y: auto;
+  }
+  
+  .help-content,
+  .about-content {
+    gap: var(--space-4);
+  }
+  
+  .help-section,
+  .about-section {
+    gap: var(--space-2);
+  }
+  
+  .help-section h3,
+  .about-section h3 {
+    font-size: var(--font-size-base);
+  }
+  
+  .help-example {
+    padding: var(--space-3);
+  }
+  
+  .help-example code {
+    font-size: var(--font-size-xs);
+  }
+}
+
+/* Landscape orientation optimizations */
+@media (max-width: 767px) and (orientation: landscape) {
+  .header {
+    padding: 0 var(--space-3);
+  }
+  
+  .header-content {
+    grid-template-columns: auto 1fr auto;
+    gap: var(--space-3);
+  }
+  
+  .header-left {
+    flex-direction: row;
+  }
+  
+  .app-title {
+    font-size: var(--font-size-lg);
+  }
+  
+  .author-info {
+    font-size: var(--font-size-sm);
+  }
+}
+
+/* High DPI mobile screens */
+@media (max-width: 639px) and (-webkit-min-device-pixel-ratio: 2) {
+  .variant-badge,
+  .stat,
+  .footer-text,
+  .footer-author,
+  .footer-variant {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
