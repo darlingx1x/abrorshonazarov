@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Markdown Editor Test</title>
+    <script>
+        // Simple test to verify the app loads
+        window.addEventListener('load', () => {
+            console.log('Testing Markdown Editor...');
+            
+            // Check if main classes are available
+            const tests = [
+                { name: 'MarkdownEditor', available: typeof MarkdownEditor !== 'undefined' },
+                { name: 'ThemeManager', available: typeof window.ThemeManager !== 'undefined' },
+                { name: 'MarkdownParser', available: typeof window.MarkdownParser !== 'undefined' },
+                { name: 'HTMLSanitizer', available: typeof window.HTMLSanitizer !== 'undefined' },
+                { name: 'UIManager', available: typeof window.UIManager !== 'undefined' },
+                { name: 'KeyboardHandler', available: typeof window.KeyboardHandler !== 'undefined' },
+                { name: 'StorageManager', available: typeof window.StorageManager !== 'undefined' },
+                { name: 'FormattingManager', available: typeof window.FormattingManager !== 'undefined' }
+            ];
+            
+            console.log('Class availability test results:');
+            tests.forEach(test => {
+                console.log(`${test.name}: ${test.available ? '✅ Available' : '❌ Missing'}`);
+            });
+            
+            // Test markdown parsing
+            if (window.MarkdownParser) {
+                const parser = new window.MarkdownParser();
+                const testMarkdown = '# Test\n**Bold** and *italic* text.';
+                const result = parser.parse(testMarkdown);
+                console.log('Markdown parsing test:', result);
+            }
+            
+            // Test HTML sanitization
+            if (window.HTMLSanitizer) {
+                const sanitizer = new window.HTMLSanitizer();
+                const testHTML = '<script>alert("xss")</script><p>Safe content</p>';
+                const result = sanitizer.sanitize(testHTML);
+                console.log('HTML sanitization test:', result);
+            }
+            
+            console.log('Test completed. Check console for results.');
+        });
+    </script>
+    <script src="app.js"></script>
+</head>
+<body>
+    <h1>Markdown Editor Test Page</h1>
+    <p>Check the browser console for test results.</p>
+    <p>If all tests pass, the main application should work correctly.</p>
+    <a href="index.html">Go to Markdown Editor</a>
+</body>
+</html>

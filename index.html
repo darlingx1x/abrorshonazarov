@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Markdown Editor - Шоназаров Аброр, группа 085 23">
+    <meta name="author" content="Шоназаров Аброр, группа 085 23">
+    <meta name="keywords" content="markdown, editor, live preview, Шоназаров Аброр">
+    <title>Markdown Editor - Шоназаров Аброр, группа 085 23</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Loading overlay -->
+    <div id="loading-overlay" class="loading-overlay" aria-hidden="true">
+        <div class="loading-spinner" role="status" aria-label="Загрузка приложения">
+            <div class="logo-animation">
+                <svg class="animated-logo" width="80" height="80" viewBox="0 0 100 100" fill="none">
+                    <!-- Animated M for Markdown -->
+                    <path class="logo-path-1" d="M20 20 L20 80 L35 65 L50 80 L65 65 L80 80 L80 20" 
+                          stroke="url(#logoGradient)" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                    <!-- Animated underline -->
+                    <line class="logo-path-2" x1="15" y1="85" x2="85" y2="85" 
+                          stroke="url(#logoGradient)" stroke-width="3" stroke-linecap="round"/>
+                    
+                    <defs>
+                        <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+                            <stop offset="50%" style="stop-color:#8b5cf6;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#06b6d4;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+                
+                <div class="loading-dots">
+                    <div class="dot dot-1"></div>
+                    <div class="dot dot-2"></div>
+                    <div class="dot dot-3"></div>
+                </div>
+            </div>
+            
+            <div class="loading-text-container">
+                <span class="loading-text">Загрузка Markdown Editor</span>
+                <div class="loading-progress">
+                    <div class="progress-bar"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main application -->
+    <div id="app" class="app" style="display: none;">
+        <!-- Header -->
+        <header class="header" role="banner">
+            <div class="header-content">
+                <div class="header-left">
+                    <h1 class="app-title">Markdown Editor</h1>
+                    <span class="variant-badge" aria-label="Вариант задания">Вариант 17</span>
+                </div>
+                <div class="header-center">
+                    <span class="author-info" aria-label="Автор проекта">Шоназаров Аброр • 085 23</span>
+                </div>
+                <div class="header-right">
+                    <button id="fullscreen-btn" class="fullscreen-btn" type="button" 
+                            aria-label="Полноэкранный режим" title="Полноэкранный режим (F11)">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+                        </svg>
+                    </button>
+                    <button id="theme-toggle" class="theme-toggle" type="button" 
+                            aria-label="Переключить тему" title="Переключить тему">
+                        <svg class="theme-icon theme-icon-light" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                        <svg class="theme-icon theme-icon-dark" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        </svg>
+                    </button>
+                    <button id="about-button" class="about-button" type="button" 
+                            aria-label="О программе" title="О программе">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M12 16v-4"></path>
+                            <path d="M12 8h.01"></path>
+                        </svg>
+                    </button>
+                    <button id="help-button" class="help-button" type="button" 
+                            aria-label="Открыть справку по Markdown" title="Справка по Markdown">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Toolbar -->
+        <div class="toolbar" role="toolbar" aria-label="Панель форматирования">
+            <div class="toolbar-section">
+                <button class="toolbar-btn" data-format="bold" type="button" 
+                        aria-label="Жирный текст (Ctrl+B)" title="Жирный (Ctrl+B)">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"></path>
+                        <path d="M6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"></path>
+                    </svg>
+                </button>
+                <button class="toolbar-btn" data-format="italic" type="button" 
+                        aria-label="Курсив (Ctrl+I)" title="Курсив (Ctrl+I)">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="19" y1="4" x2="10" y2="4"></line>
+                        <line x1="14" y1="20" x2="5" y2="20"></line>
+                        <line x1="15" y1="4" x2="9" y2="20"></line>
+                    </svg>
+                </button>
+                <button class="toolbar-btn" data-format="strikethrough" type="button" 
+                        aria-label="Зачеркнутый текст" title="Зачеркнутый">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M16 4H9a3 3 0 0 0-2.83 4"></path>
+                        <path d="M14 12a4 4 0 0 1 0 8H6"></path>
+                        <line x1="4" y1="12" x2="20" y2="12"></line>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="toolbar-divider" aria-hidden="true"></div>
+            
+            <div class="toolbar-section">
+                <button class="toolbar-btn" data-format="h1" type="button" 
+                        aria-label="Заголовок 1" title="Заголовок 1">
+                    <span class="toolbar-text">H1</span>
+                </button>
+                <button class="toolbar-btn" data-format="h2" type="button" 
+                        aria-label="Заголовок 2" title="Заголовок 2">
+                    <span class="toolbar-text">H2</span>
+                </button>
+                <button class="toolbar-btn" data-format="h3" type="button" 
+                        aria-label="Заголовок 3" title="Заголовок 3">
+                    <span class="toolbar-text">H3</span>
+                </button>
+            </div>
+            
+            <div class="toolbar-divider" aria-hidden="true"></div>
+            
+            <div class="toolbar-section">
+                <button class="toolbar-btn" data-format="ul" type="button" 
+                        aria-label="Маркированный список" title="Список">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="8" y1="6" x2="21" y2="6"></line>
+                        <line x1="8" y1="12" x2="21" y2="12"></line>
+                        <line x1="8" y1="18" x2="21" y2="18"></line>
+                        <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                        <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                        <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                    </svg>
+                </button>
+                <button class="toolbar-btn" data-format="ol" type="button" 
+                        aria-label="Нумерованный список" title="Нумерованный список">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="10" y1="6" x2="21" y2="6"></line>
+                        <line x1="10" y1="12" x2="21" y2="12"></line>
+                        <line x1="10" y1="18" x2="21" y2="18"></line>
+                        <path d="M4 6h1v4"></path>
+                        <path d="M4 10h2"></path>
+                        <path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"></path>
+                    </svg>
+                </button>
+                <button class="toolbar-btn" data-format="quote" type="button" 
+                        aria-label="Цитата" title="Цитата">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"></path>
+                        <path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"></path>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="toolbar-divider" aria-hidden="true"></div>
+            
+            <div class="toolbar-section">
+                <button class="toolbar-btn" data-format="code" type="button" 
+                        aria-label="Код" title="Код">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="16,18 22,12 16,6"></polyline>
+                        <polyline points="8,6 2,12 8,18"></polyline>
+                    </svg>
+                </button>
+                <button class="toolbar-btn" data-format="link" type="button" 
+                        aria-label="Ссылка (Ctrl+K)" title="Ссылка (Ctrl+K)">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="toolbar-divider" aria-hidden="true"></div>
+            
+            <div class="toolbar-section">
+                <button id="clear-btn" class="toolbar-btn" type="button" 
+                        aria-label="Очистить содержимое" title="Очистить">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="3,6 5,6 21,6"></polyline>
+                        <path d="M19,6v14a2,2,0,0,1-2,2H7a2,2,0,0,1-2-2V6m3,0V4a2,2,0,0,1,2-2h4a2,2,0,0,1,2,2V6"></path>
+                    </svg>
+                </button>
+                <button id="copy-btn" class="toolbar-btn" type="button" 
+                        aria-label="Копировать содержимое" title="Копировать">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="toolbar-divider" aria-hidden="true"></div>
+            
+            <div class="toolbar-section">
+                <button id="download-md" class="toolbar-btn" type="button" 
+                        aria-label="Скачать как Markdown" title="Скачать .md">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14,2 14,8 20,8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                        <polyline points="10,9 9,9 8,9"></polyline>
+                    </svg>
+                </button>
+                <button id="download-html" class="toolbar-btn" type="button" 
+                        aria-label="Скачать как HTML" title="Скачать .html">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14,2 14,8 20,8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                        <polyline points="10,9 9,9 8,9"></polyline>
+                    </svg>
+                </button>
+                <button id="download-pdf" class="toolbar-btn" type="button" 
+                        aria-label="Скачать как PDF" title="Скачать .pdf">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14,2 14,8 20,8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                        <polyline points="10,9 9,9 8,9"></polyline>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- View mode controls -->
+        <div class="view-controls" role="tablist" aria-label="Режимы просмотра">
+            <button class="view-btn active" data-view="split" type="button" role="tab" 
+                    aria-selected="true" aria-controls="editor-panel preview-panel" 
+                    aria-label="Разделенный вид">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="12" y1="3" x2="12" y2="21"></line>
+                </svg>
+                <span class="view-label">Разделенный</span>
+            </button>
+            <button class="view-btn" data-view="editor" type="button" role="tab" 
+                    aria-selected="false" aria-controls="editor-panel" 
+                    aria-label="Только редактор">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                </svg>
+                <span class="view-label">Редактор</span>
+            </button>
+            <button class="view-btn" data-view="preview" type="button" role="tab" 
+                    aria-selected="false" aria-controls="preview-panel" 
+                    aria-label="Только превью">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+                <span class="view-label">Превью</span>
+            </button>
+        </div>
+
+        <!-- Main content area -->
+        <main class="main-content" role="main">
+            <div class="editor-container">
+                <!-- Editor panel -->
+                <section id="editor-panel" class="editor-panel" role="tabpanel" 
+                         aria-labelledby="editor-tab" aria-label="Редактор Markdown">
+                    <div class="editor-header">
+                        <h2 class="panel-title">Редактор</h2>
+                        <div class="editor-stats" aria-live="polite">
+                            <span class="stat" aria-label="Символов">
+                                <span id="char-count">0</span> символов
+                            </span>
+                            <span class="stat" aria-label="Слов">
+                                <span id="word-count">0</span> слов
+                            </span>
+                            <span class="stat" aria-label="Строк">
+                                <span id="line-count">1</span> строк
+                            </span>
+                        </div>
+                    </div>
+                    <textarea id="editor" class="editor-textarea" 
+                              placeholder="Начните печатать Markdown..."
+                              aria-label="Редактор Markdown текста"
+                              spellcheck="false"
+                              autocomplete="off"
+                              autocorrect="off"
+                              autocapitalize="off"></textarea>
+                </section>
+
+                <!-- Preview panel -->
+                <section id="preview-panel" class="preview-panel" role="tabpanel" 
+                         aria-labelledby="preview-tab" aria-label="Предпросмотр HTML">
+                    <div class="preview-header">
+                        <h2 class="panel-title">Предпросмотр</h2>
+                    </div>
+                    <div id="preview" class="preview-content" aria-live="polite">
+                        <div class="empty-state">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14,2 14,8 20,8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                                <polyline points="10,9 9,9 8,9"></polyline>
+                            </svg>
+                            <h3>Начните печатать Markdown...</h3>
+                            <p>Ваш текст будет отображаться здесь в реальном времени</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer" role="contentinfo">
+            <div class="footer-content">
+                <div class="footer-left">
+                    <span class="footer-text">© 2026 Markdown Editor</span>
+                </div>
+                <div class="footer-center">
+                    <span class="footer-author">Автор: Шоназаров Аброр • Группа: 085 23</span>
+                </div>
+                <div class="footer-right">
+                    <span class="footer-variant">Вариант 17</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Help Modal -->
+    <div id="help-modal" class="modal" role="dialog" aria-modal="true" 
+         aria-labelledby="help-modal-title" aria-hidden="true">
+        <div class="modal-overlay" aria-hidden="true"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="help-modal-title" class="modal-title">Справка по Markdown</h2>
+                <button id="help-close" class="modal-close" type="button" 
+                        aria-label="Закрыть справку" title="Закрыть (Esc)">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="help-content">
+                    <div class="help-section">
+                        <h3>Заголовки</h3>
+                        <div class="help-example">
+                            <code># Заголовок 1<br>## Заголовок 2<br>### Заголовок 3</code>
+                        </div>
+                    </div>
+                    
+                    <div class="help-section">
+                        <h3>Форматирование текста</h3>
+                        <div class="help-example">
+                            <code>**Жирный текст**<br>*Курсив*<br>~~Зачеркнутый~~<br>`Код`</code>
+                        </div>
+                    </div>
+                    
+                    <div class="help-section">
+                        <h3>Списки</h3>
+                        <div class="help-example">
+                            <code>- Элемент списка<br>* Другой элемент<br><br>1. Нумерованный<br>2. Список</code>
+                        </div>
+                    </div>
+                    
+                    <div class="help-section">
+                        <h3>Ссылки и цитаты</h3>
+                        <div class="help-example">
+                            <code>[Текст ссылки](https://example.com)<br><br>&gt; Цитата</code>
+                        </div>
+                    </div>
+                    
+                    <div class="help-section">
+                        <h3>Блоки кода</h3>
+                        <div class="help-example">
+                            <code>```<br>Блок кода<br>```</code>
+                        </div>
+                    </div>
+                    
+                    <div class="help-section">
+                        <h3>Горизонтальная линия</h3>
+                        <div class="help-example">
+                            <code>---</code>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- About Modal -->
+    <div id="about-modal" class="modal" role="dialog" aria-modal="true" 
+         aria-labelledby="about-modal-title" aria-hidden="true">
+        <div class="modal-overlay" aria-hidden="true"></div>
+        <div class="modal-content about-modal-content">
+            <div class="modal-header">
+                <h2 id="about-modal-title" class="modal-title">О программе</h2>
+                <button id="about-close" class="modal-close" type="button" 
+                        aria-label="Закрыть" title="Закрыть (Esc)">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="about-content">
+                    <!-- App Info Section -->
+                    <div class="about-section app-info">
+                        <div class="app-logo">
+                            <svg width="48" height="48" viewBox="0 0 100 100" fill="none">
+                                <path d="M20 20 L20 80 L35 65 L50 80 L65 65 L80 80 L80 20" 
+                                      stroke="url(#aboutLogoGradient)" stroke-width="4" fill="none" 
+                                      stroke-linecap="round" stroke-linejoin="round"/>
+                                <line x1="15" y1="85" x2="85" y2="85" 
+                                      stroke="url(#aboutLogoGradient)" stroke-width="3" stroke-linecap="round"/>
+                                <defs>
+                                    <linearGradient id="aboutLogoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+                                        <stop offset="50%" style="stop-color:#8b5cf6;stop-opacity:1" />
+                                        <stop offset="100%" style="stop-color:#06b6d4;stop-opacity:1" />
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                        </div>
+                        <h3>Markdown Editor</h3>
+                        <p class="version">Версия 1.0 • Вариант 17</p>
+                        <p class="author">Автор: <strong>Шоназаров Аброр</strong><br>Группа: <strong>085 23</strong></p>
+                        <p class="description">Современный редактор Markdown с живым предпросмотром и расширенными возможностями</p>
+                    </div>
+
+                    <!-- Features Section -->
+                    <div class="about-section features">
+                        <h3>🚀 Основные возможности</h3>
+                        <div class="features-grid">
+                            <div class="feature-item">
+                                <div class="feature-icon">✏️</div>
+                                <div class="feature-text">
+                                    <h4>Живое редактирование</h4>
+                                    <p>Мгновенный предпросмотр изменений в реальном времени</p>
+                                </div>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feature-icon">🎨</div>
+                                <div class="feature-text">
+                                    <h4>Темы оформления</h4>
+                                    <p>Светлая, темная и автоматическая темы</p>
+                                </div>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feature-icon">📱</div>
+                                <div class="feature-text">
+                                    <h4>Адаптивный дизайн</h4>
+                                    <p>Отлично работает на всех устройствах</p>
+                                </div>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feature-icon">⚡</div>
+                                <div class="feature-text">
+                                    <h4>Быстрые действия</h4>
+                                    <p>Панель инструментов для быстрого форматирования</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Advanced Features Section -->
+                    <div class="about-section advanced-features">
+                        <h3>✨ Продвинутые функции</h3>
+                        <div class="features-list">
+                            <div class="feature-item">
+                                <span class="feature-badge">NEW</span>
+                                <strong>Drag & Drop</strong> - Перетаскивание файлов .md и .txt
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-badge">NEW</span>
+                                <strong>Синхронизация прокрутки</strong> - Между редактором и предпросмотром
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-badge">NEW</span>
+                                <strong>Полноэкранный режим</strong> - F11 или кнопка в интерфейсе
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-badge">NEW</span>
+                                <strong>Экспорт в PDF</strong> - Печать документа в PDF
+                            </div>
+                            <div class="feature-item">
+                                <strong>Автосохранение</strong> - Автоматическое сохранение в localStorage
+                            </div>
+                            <div class="feature-item">
+                                <strong>Статистика</strong> - Подсчет символов, слов и строк
+                            </div>
+                            <div class="feature-item">
+                                <strong>Экспорт файлов</strong> - Сохранение в .md и .html форматах
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- View Modes Section -->
+                    <div class="about-section view-modes">
+                        <h3>👁️ Режимы просмотра</h3>
+                        <div class="view-modes-grid">
+                            <div class="view-mode-item">
+                                <div class="view-mode-icon">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                        <line x1="12" y1="3" x2="12" y2="21"></line>
+                                    </svg>
+                                </div>
+                                <h4>Разделенный</h4>
+                                <p>Редактор и предпросмотр рядом</p>
+                            </div>
+                            <div class="view-mode-item">
+                                <div class="view-mode-icon">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                    </svg>
+                                </div>
+                                <h4>Только редактор</h4>
+                                <p>Фокус на написании текста</p>
+                            </div>
+                            <div class="view-mode-item">
+                                <div class="view-mode-icon">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                        <circle cx="12" cy="12" r="3"></circle>
+                                    </svg>
+                                </div>
+                                <h4>Только превью</h4>
+                                <p>Просмотр готового документа</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Keyboard Shortcuts Section -->
+                    <div class="about-section shortcuts">
+                        <h3>⌨️ Горячие клавиши</h3>
+                        <div class="shortcuts-grid">
+                            <div class="shortcut-item">
+                                <kbd>Ctrl</kbd> + <kbd>B</kbd>
+                                <span>Жирный текст</span>
+                            </div>
+                            <div class="shortcut-item">
+                                <kbd>Ctrl</kbd> + <kbd>I</kbd>
+                                <span>Курсив</span>
+                            </div>
+                            <div class="shortcut-item">
+                                <kbd>Ctrl</kbd> + <kbd>K</kbd>
+                                <span>Ссылка</span>
+                            </div>
+                            <div class="shortcut-item">
+                                <kbd>F11</kbd>
+                                <span>Полноэкранный режим</span>
+                            </div>
+                            <div class="shortcut-item">
+                                <kbd>Esc</kbd>
+                                <span>Закрыть модальные окна</span>
+                            </div>
+                            <div class="shortcut-item">
+                                <kbd>Tab</kbd>
+                                <span>Навигация с клавиатуры</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Technical Info Section -->
+                    <div class="about-section tech-info">
+                        <h3>🔧 Технические характеристики</h3>
+                        <div class="tech-details">
+                            <div class="tech-item">
+                                <strong>Технологии:</strong> HTML5, CSS3, JavaScript (ES6+)
+                            </div>
+                            <div class="tech-item">
+                                <strong>Архитектура:</strong> Модульная система с разделением ответственности
+                            </div>
+                            <div class="tech-item">
+                                <strong>Совместимость:</strong> Современные браузеры (Chrome, Firefox, Safari, Edge)
+                            </div>
+                            <div class="tech-item">
+                                <strong>Доступность:</strong> ARIA-атрибуты, навигация с клавиатуры
+                            </div>
+                            <div class="tech-item">
+                                <strong>Производительность:</strong> Оптимизированная отрисовка, дебаунсинг
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="about-footer">
+                        <p>© 2026 Markdown Editor • Создано с ❤️ для удобной работы с Markdown</p>
+                        <p class="build-info">Сборка: 1.0.0 • Дата: Январь 2026</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast notifications container -->
+    <div id="toast-container" class="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+    <!-- Error messages container -->
+    <div id="error-container" class="error-container" aria-live="assertive" aria-atomic="true"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>

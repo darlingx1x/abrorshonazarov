@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug Classes</title>
+</head>
+<body>
+    <h1>Debug: Проверка доступности классов</h1>
+    <div id="results"></div>
+    
+    <script src="app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const results = document.getElementById('results');
+            
+            const classes = [
+                'ThemeManager',
+                'MarkdownParser', 
+                'HTMLSanitizer',
+                'UIManager',
+                'KeyboardHandler',
+                'StorageManager',
+                'FormattingManager'
+            ];
+            
+            let html = '<h2>Результаты проверки классов:</h2><ul>';
+            
+            classes.forEach(className => {
+                const available = typeof window[className] !== 'undefined';
+                const status = available ? '✅ Доступен' : '❌ Недоступен';
+                html += `<li><strong>${className}</strong>: ${status}`;
+                
+                if (available) {
+                    try {
+                        // Попробуем создать экземпляр (кроме MarkdownEditor)
+                        if (className === 'UIManager') {
+                            // UIManager требует app параметр
+                            html += ' (конструктор требует параметр app)';
+                        } else if (className !== 'MarkdownEditor') {
+                            const instance = new window[className]();
+                            html += ' (экземпляр создан успешно)';
+                        }
+                    } catch (error) {
+                        html += ` (ошибка создания: ${error.message})`;
+                    }
+                }
+                
+                html += '</li>';
+            });
+            
+            html += '</ul>';
+            
+            // Дополнительная информация
+            html += '<h2>Дополнительная информация:</h2>';
+            html += `<p>Время загрузки: ${new Date().toLocaleTimeString()}</p>`;
+            html += `<p>window.UIManager тип: ${typeof window.UIManager}</p>`;
+            html += `<p>window.UIManager: ${window.UIManager}</p>`;
+            
+            results.innerHTML = html;
+            
+            console.log('=== DEBUG CLASSES ===');
+            classes.forEach(className => {
+                console.log(`${className}:`, typeof window[className], window[className]);
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help Button Debug</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .debug-section {
+            background: white;
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 4px;
+            background: #2563eb;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #1d4ed8;
+        }
+        #console-output {
+            background: #1a1a1a;
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: monospace;
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <h1>Help Button Debug Test</h1>
+    
+    <div class="debug-section">
+        <h2>Element Tests</h2>
+        <button onclick="testHelpButton()">Test Help Button Element</button>
+        <button onclick="testHelpModal()">Test Help Modal Element</button>
+        <button onclick="testEventListener()">Test Event Listener</button>
+        <button onclick="testModalShow()">Test Modal Show Directly</button>
+        <button onclick="clearConsole()">Clear Console</button>
+    </div>
+    
+    <div class="debug-section">
+        <h2>Console Output</h2>
+        <div id="console-output"></div>
+    </div>
+    
+    <script>
+        // Capture console.log output
+        const originalLog = console.log;
+        const originalError = console.error;
+        const consoleOutput = document.getElementById('console-output');
+        
+        function logToDiv(message, type = 'log') {
+            const timestamp = new Date().toLocaleTimeString();
+            const color = type === 'error' ? '#ff6b6b' : '#00ff00';
+            consoleOutput.innerHTML += `<span style="color: ${color}">[${timestamp}] ${message}</span>\n`;
+            consoleOutput.scrollTop = consoleOutput.scrollHeight;
+        }
+        
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            logToDiv(args.join(' '), 'log');
+        };
+        
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            logToDiv(args.join(' '), 'error');
+        };
+        
+        function testHelpButton() {
+            console.log('=== Testing Help Button Element ===');
+            const helpButton = document.getElementById('help-button');
+            console.log('Help button element:', helpButton);
+            console.log('Help button exists:', !!helpButton);
+            if (helpButton) {
+                console.log('Help button tagName:', helpButton.tagName);
+                console.log('Help button className:', helpButton.className);
+                console.log('Help button innerHTML:', helpButton.innerHTML);
+            }
+        }
+        
+        function testHelpModal() {
+            console.log('=== Testing Help Modal Element ===');
+            const helpModal = document.getElementById('help-modal');
+            console.log('Help modal element:', helpModal);
+            console.log('Help modal exists:', !!helpModal);
+            if (helpModal) {
+                console.log('Help modal className:', helpModal.className);
+                console.log('Help modal style.display:', helpModal.style.display);
+                console.log('Help modal aria-hidden:', helpModal.getAttribute('aria-hidden'));
+            }
+        }
+        
+        function testEventListener() {
+            console.log('=== Testing Event Listener ===');
+            const helpButton = document.getElementById('help-button');
+            if (helpButton) {
+                console.log('Adding test click listener...');
+                helpButton.addEventListener('click', function(e) {
+                    console.log('TEST: Help button clicked!', e);
+                    console.log('TEST: Event target:', e.target);
+                    console.log('TEST: Event currentTarget:', e.currentTarget);
+                });
+                console.log('Test listener added. Try clicking the help button now.');
+            } else {
+                console.error('Help button not found for event listener test');
+            }
+        }
+        
+        function testModalShow() {
+            console.log('=== Testing Modal Show Directly ===');
+            const helpModal = document.getElementById('help-modal');
+            if (helpModal) {
+                console.log('Adding show class to modal...');
+                helpModal.classList.add('show');
+                helpModal.setAttribute('aria-hidden', 'false');
+                console.log('Modal classes after adding show:', helpModal.className);
+                console.log('Modal should now be visible');
+                
+                // Auto-hide after 3 seconds
+                setTimeout(() => {
+                    console.log('Auto-hiding modal...');
+                    helpModal.classList.remove('show');
+                    helpModal.setAttribute('aria-hidden', 'true');
+                }, 3000);
+            } else {
+                console.error('Help modal not found for direct show test');
+            }
+        }
+        
+        function clearConsole() {
+            consoleOutput.innerHTML = '';
+        }
+        
+        // Load the main app script
+        console.log('Loading main app script...');
+        const script = document.createElement('script');
+        script.src = 'app.js';
+        script.onload = function() {
+            console.log('Main app script loaded');
+            console.log('window.markdownEditor:', !!window.markdownEditor);
+        };
+        script.onerror = function() {
+            console.error('Failed to load main app script');
+        };
+        document.head.appendChild(script);
+        
+        // Also load the main HTML content
+        console.log('Loading main HTML content...');
+        fetch('index.html')
+            .then(response => response.text())
+            .then(html => {
+                console.log('Main HTML loaded, length:', html.length);
+                // Extract just the body content and append it
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const mainContent = doc.body.innerHTML;
+                
+                // Create a container for the main app
+                const appContainer = document.createElement('div');
+                appContainer.innerHTML = mainContent;
+                appContainer.style.display = 'none'; // Hide initially
+                document.body.appendChild(appContainer);
+                
+                console.log('Main HTML content appended to page');
+                console.log('Help button now exists:', !!document.getElementById('help-button'));
+                console.log('Help modal now exists:', !!document.getElementById('help-modal'));
+            })
+            .catch(error => {
+                console.error('Failed to load main HTML:', error);
+            });
+    </script>
+</body>
+</html>

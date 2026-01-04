@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Final Help Button Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 4px;
+            background: #2563eb;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #1d4ed8;
+        }
+        .help-button {
+            width: 2.5rem;
+            height: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            background-color: transparent;
+            color: #475569;
+            transition: all 150ms ease-in-out;
+            border: 1px solid #e2e8f0;
+        }
+        .help-button:hover {
+            background-color: #f1f5f9;
+            color: #0f172a;
+        }
+        .help-button svg {
+            pointer-events: none;
+        }
+        #console-output {
+            background: #1a1a1a;
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: monospace;
+            max-height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 1050;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 250ms ease-in-out, visibility 250ms ease-in-out;
+            background: rgba(0, 0, 0, 0.5);
+        }
+        .modal.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            position: relative;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            max-width: 90vw;
+            max-height: 90vh;
+            width: 100%;
+            max-width: 42rem;
+            display: flex;
+            flex-direction: column;
+            transform: scale(0.95);
+            transition: transform 250ms ease-in-out;
+        }
+        .modal.show .modal-content {
+            transform: scale(1);
+        }
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.5rem 1.5rem 1rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #0f172a;
+        }
+        .modal-close {
+            width: 2.5rem;
+            height: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            background-color: transparent;
+            color: #475569;
+            transition: all 150ms ease-in-out;
+            border: none;
+            cursor: pointer;
+        }
+        .modal-body {
+            padding: 1rem 1.5rem 1.5rem;
+            overflow-y: auto;
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+    <h1>Final Help Button Test</h1>
+    
+    <div class="test-section">
+        <h2>Test Help Button (Replica)</h2>
+        <p>This is an exact replica of the help button from the main app:</p>
+        <button id="test-help-button" class="help-button" type="button" 
+                aria-label="Открыть справку по Markdown" title="Справка">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+        </button>
+        
+        <div style="margin-top: 10px;">
+            <button onclick="testButtonClick()">Test Button Click</button>
+            <button onclick="testModalShow()">Test Modal Show</button>
+            <button onclick="clearLog()">Clear Log</button>
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Main App Integration Test</h2>
+        <button onclick="loadMainApp()">Load Main App</button>
+        <button onclick="testMainAppButton()">Test Main App Help Button</button>
+        <div id="main-app-container" style="display: none;"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Console Output</h2>
+        <div id="console-output"></div>
+    </div>
+    
+    <!-- Test Modal -->
+    <div id="test-modal" class="modal" role="dialog" aria-modal="true" 
+         aria-labelledby="test-modal-title" aria-hidden="true">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="test-modal-title" class="modal-title">Test Modal</h2>
+                <button id="test-modal-close" class="modal-close" type="button" 
+                        aria-label="Close" title="Close">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>This is a test modal. If you can see this, the modal functionality is working correctly.</p>
+                <p>The help button click event was successfully captured and processed.</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const consoleOutput = document.getElementById('console-output');
+        const testHelpButton = document.getElementById('test-help-button');
+        const testModal = document.getElementById('test-modal');
+        const testModalClose = document.getElementById('test-modal-close');
+        
+        // Console logging
+        function logMessage(message, type = 'log') {
+            const timestamp = new Date().toLocaleTimeString();
+            const color = type === 'error' ? '#ff6b6b' : type === 'success' ? '#51cf66' : '#00ff00';
+            consoleOutput.innerHTML += `<span style="color: ${color}">[${timestamp}] ${message}</span>\n`;
+            consoleOutput.scrollTop = consoleOutput.scrollHeight;
+            console.log(message);
+        }
+        
+        function clearLog() {
+            consoleOutput.innerHTML = '';
+        }
+        
+        // Test functions
+        function testButtonClick() {
+            logMessage('=== Testing Button Click ===');
+            logMessage('Button element: ' + !!testHelpButton);
+            if (testHelpButton) {
+                logMessage('Triggering click...');
+                testHelpButton.click();
+            }
+        }
+        
+        function testModalShow() {
+            logMessage('=== Testing Modal Show ===');
+            showTestModal();
+        }
+        
+        function showTestModal() {
+            logMessage('Showing test modal...');
+            testModal.classList.add('show');
+            testModal.setAttribute('aria-hidden', 'false');
+            logMessage('Modal shown successfully', 'success');
+        }
+        
+        function hideTestModal() {
+            logMessage('Hiding test modal...');
+            testModal.classList.remove('show');
+            testModal.setAttribute('aria-hidden', 'true');
+            logMessage('Modal hidden successfully', 'success');
+        }
+        
+        function loadMainApp() {
+            logMessage('=== Loading Main App ===');
+            const container = document.getElementById('main-app-container');
+            
+            fetch('index.html')
+                .then(response => response.text())
+                .then(html => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    
+                    // Extract the app content
+                    const appElement = doc.getElementById('app');
+                    const helpModal = doc.getElementById('help-modal');
+                    
+                    if (appElement && helpModal) {
+                        container.innerHTML = appElement.outerHTML + helpModal.outerHTML;
+                        container.style.display = 'block';
+                        logMessage('Main app HTML loaded successfully', 'success');
+                        
+                        // Load the main app script
+                        const script = document.createElement('script');
+                        script.src = 'app.js';
+                        script.onload = () => {
+                            logMessage('Main app script loaded successfully', 'success');
+                        };
+                        script.onerror = () => {
+                            logMessage('Failed to load main app script', 'error');
+                        };
+                        document.head.appendChild(script);
+                    } else {
+                        logMessage('Failed to find app elements in HTML', 'error');
+                    }
+                })
+                .catch(error => {
+                    logMessage('Failed to load main app: ' + error.message, 'error');
+                });
+        }
+        
+        function testMainAppButton() {
+            logMessage('=== Testing Main App Help Button ===');
+            const mainHelpButton = document.getElementById('help-button');
+            const mainHelpModal = document.getElementById('help-modal');
+            
+            logMessage('Main help button: ' + !!mainHelpButton);
+            logMessage('Main help modal: ' + !!mainHelpModal);
+            
+            if (mainHelpButton) {
+                logMessage('Clicking main app help button...');
+                mainHelpButton.click();
+            } else {
+                logMessage('Main app help button not found', 'error');
+            }
+        }
+        
+        // Event listeners
+        testHelpButton.addEventListener('click', function(e) {
+            logMessage('Test help button clicked!', 'success');
+            logMessage('Event target: ' + e.target.tagName);
+            logMessage('Event currentTarget: ' + e.currentTarget.tagName);
+            showTestModal();
+        });
+        
+        testModalClose.addEventListener('click', hideTestModal);
+        
+        // Close modal on overlay click
+        testModal.addEventListener('click', function(e) {
+            if (e.target === testModal) {
+                hideTestModal();
+            }
+        });
+        
+        // Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                if (testModal.classList.contains('show')) {
+                    hideTestModal();
+                }
+            }
+        });
+        
+        // Initialize
+        logMessage('Final test page loaded');
+        logMessage('Test help button: ' + !!testHelpButton);
+        logMessage('Test modal: ' + !!testModal);
+    </script>
+</body>
+</html>
