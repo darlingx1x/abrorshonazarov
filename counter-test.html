@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Counter Test - Markdown Editor</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+        
+        .test-section {
+            border: 2px solid #3b82f6;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        
+        .test-title {
+            background: #3b82f6;
+            color: white;
+            padding: 5px 10px;
+            margin: -20px -20px 20px -20px;
+            border-radius: 6px 6px 0 0;
+        }
+        
+        .debug-info {
+            background: #f0f0f0;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        
+        .manual-test {
+            background: #e8f4fd;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        
+        .editor-stats {
+            background: #f8fafc;
+            padding: 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            display: flex;
+            gap: 20px;
+            margin: 10px 0;
+        }
+        
+        .stat {
+            font-size: 14px;
+            color: #64748b;
+        }
+        
+        .stat span {
+            color: #2563eb;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Counter System Test</h1>
+    
+    <div class="test-section">
+        <div class="test-title">1. DOM Elements Test</div>
+        <div id="dom-test-results"></div>
+    </div>
+    
+    <div class="test-section">
+        <div class="test-title">2. Counter Logic Test</div>
+        <div class="manual-test">
+            <h3>Manual Counter Test</h3>
+            <textarea id="test-editor" placeholder="Введите текст для тестирования счетчиков..." 
+                      style="width: 100%; height: 100px; padding: 10px; border: 1px solid #ccc; border-radius: 4px;"></textarea>
+            
+            <div class="editor-stats">
+                <span class="stat">
+                    <span id="char-count">0</span> символов
+                </span>
+                <span class="stat">
+                    <span id="word-count">0</span> слов
+                </span>
+                <span class="stat">
+                    <span id="line-count">1</span> строк
+                </span>
+            </div>
+            
+            <button onclick="manualUpdateCounters()" style="padding: 8px 16px; background: #3b82f6; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                Обновить счетчики вручную
+            </button>
+        </div>
+        
+        <div id="counter-test-results"></div>
+    </div>
+    
+    <div class="test-section">
+        <div class="test-title">3. Event Listener Test</div>
+        <div id="event-test-results"></div>
+    </div>
+    
+    <div class="test-section">
+        <div class="test-title">4. Debug Console</div>
+        <div id="debug-console" class="debug-info"></div>
+    </div>
+
+    <script>
+        // Test functions
+        function testDOMElements() {
+            const results = document.getElementById('dom-test-results');
+            let html = '<h3>DOM Elements Check:</h3>';
+            
+            const elements = {
+                'char-count': document.getElementById('char-count'),
+                'word-count': document.getElementById('word-count'),
+                'line-count': document.getElementById('line-count'),
+                'test-editor': document.getElementById('test-editor')
+            };
+            
+            for (const [id, element] of Object.entries(elements)) {
+                const status = element ? '✅ Found' : '❌ Not Found';
+                html += `<div>${id}: ${status}</div>`;
+                if (element) {
+                    html += `<div style="margin-left: 20px; font-size: 12px; color: #666;">
+                        Tag: ${element.tagName}, Text: "${element.textContent}"
+                    </div>`;
+                }
+            }
+            
+            results.innerHTML = html;
+        }
+        
+        function updateCounters(content) {
+            console.log('Manual updateCounters called with:', content);
+            
+            const counters = {
+                characters: content.length,
+                words: content.trim() ? content.trim().split(/\s+/).length : 0,
+                lines: content.split('\n').length
+            };
+            
+            console.log('Calculated counters:', counters);
+            
+            // Update UI
+            const charCount = document.getElementById('char-count');
+            const wordCount = document.getElementById('word-count');
+            const lineCount = document.getElementById('line-count');
+            
+            if (charCount) {
+                charCount.textContent = counters.characters;
+                console.log('Updated char count to:', counters.characters);
+            } else {
+                console.error('charCount element not found');
+            }
+            
+            if (wordCount) {
+                wordCount.textContent = counters.words;
+                console.log('Updated word count to:', counters.words);
+            } else {
+                console.error('wordCount element not found');
+            }
+            
+            if (lineCount) {
+                lineCount.textContent = counters.lines;
+                console.log('Updated line count to:', counters.lines);
+            } else {
+                console.error('lineCount element not found');
+            }
+            
+            // Update debug console
+            const debugConsole = document.getElementById('debug-console');
+            debugConsole.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Updated counters: ${JSON.stringify(counters)}</div>`;
+            
+            return counters;
+        }
+        
+        function manualUpdateCounters() {
+            const editor = document.getElementById('test-editor');
+            const content = editor.value;
+            updateCounters(content);
+        }
+        
+        function testEventListeners() {
+            const results = document.getElementById('event-test-results');
+            const editor = document.getElementById('test-editor');
+            
+            let html = '<h3>Event Listeners Test:</h3>';
+            
+            if (editor) {
+                // Add event listeners
+                editor.addEventListener('input', (e) => {
+                    console.log('Input event triggered:', e.target.value);
+                    updateCounters(e.target.value);
+                    
+                    const debugConsole = document.getElementById('debug-console');
+                    debugConsole.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Input event: "${e.target.value}"</div>`;
+                });
+                
+                editor.addEventListener('keyup', (e) => {
+                    console.log('Keyup event triggered:', e.target.value);
+                    
+                    const debugConsole = document.getElementById('debug-console');
+                    debugConsole.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Keyup event: "${e.target.value}"</div>`;
+                });
+                
+                html += '<div>✅ Event listeners added to test editor</div>';
+                html += '<div style="margin-left: 20px; font-size: 12px; color: #666;">Try typing in the textarea above to test</div>';
+            } else {
+                html += '<div>❌ Test editor not found</div>';
+            }
+            
+            results.innerHTML = html;
+        }
+        
+        // Test different content types
+        function testCounterLogic() {
+            const results = document.getElementById('counter-test-results');
+            let html = '<h3>Counter Logic Tests:</h3>';
+            
+            const testCases = [
+                { content: '', expected: { characters: 0, words: 0, lines: 1 } },
+                { content: 'Hello', expected: { characters: 5, words: 1, lines: 1 } },
+                { content: 'Hello world', expected: { characters: 11, words: 2, lines: 1 } },
+                { content: 'Hello\nworld', expected: { characters: 11, words: 2, lines: 2 } },
+                { content: 'Hello\n\nworld', expected: { characters: 12, words: 2, lines: 3 } },
+                { content: '   ', expected: { characters: 3, words: 0, lines: 1 } },
+                { content: 'ЗЕЛЛОУ', expected: { characters: 6, words: 1, lines: 1 } }
+            ];
+            
+            testCases.forEach((testCase, index) => {
+                const actual = {
+                    characters: testCase.content.length,
+                    words: testCase.content.trim() ? testCase.content.trim().split(/\s+/).length : 0,
+                    lines: testCase.content.split('\n').length
+                };
+                
+                const passed = JSON.stringify(actual) === JSON.stringify(testCase.expected);
+                const status = passed ? '✅' : '❌';
+                
+                html += `<div>${status} Test ${index + 1}: "${testCase.content.replace(/\n/g, '\\n')}"</div>`;
+                html += `<div style="margin-left: 20px; font-size: 12px;">
+                    Expected: ${JSON.stringify(testCase.expected)}<br>
+                    Actual: ${JSON.stringify(actual)}
+                </div>`;
+            });
+            
+            results.innerHTML = html;
+        }
+        
+        // Initialize tests
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('Counter test page loaded');
+            
+            testDOMElements();
+            testCounterLogic();
+            testEventListeners();
+            
+            // Initial counter update
+            updateCounters('');
+        });
+    </script>
+</body>
+</html>

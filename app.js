@@ -71,6 +71,17 @@ class MarkdownEditor {
       // Mark as initialized
       this.setState({ isInitialized: true });
       
+      // Force initial counter update with delay to ensure DOM is ready
+      console.log('Forcing initial counter update...');
+      setTimeout(() => {
+        console.log('Delayed counter update executing...');
+        // Ensure we have initial empty state
+        if (!this.state.content) {
+          this.setState({ content: '' });
+        }
+        this.updateCounters();
+      }, 100);
+      
       console.log('Markdown Editor initialized successfully');
       
     } catch (error) {
@@ -144,6 +155,22 @@ class MarkdownEditor {
     if (this.elements.helpModal) {
       console.log('Help modal ID:', this.elements.helpModal.id);
       console.log('Help modal class:', this.elements.helpModal.className);
+    }
+    
+    // Debug counter elements
+    console.log('=== COUNTER ELEMENTS DEBUG ===');
+    console.log('charCount element:', this.elements.charCount);
+    console.log('wordCount element:', this.elements.wordCount);
+    console.log('lineCount element:', this.elements.lineCount);
+    
+    if (!this.elements.charCount) {
+      console.error('charCount element not found! Looking for #char-count');
+    }
+    if (!this.elements.wordCount) {
+      console.error('wordCount element not found! Looking for #word-count');
+    }
+    if (!this.elements.lineCount) {
+      console.error('lineCount element not found! Looking for #line-count');
     }
     
     // Validate critical elements
@@ -241,17 +268,23 @@ class MarkdownEditor {
     
     // Editor input events
     if (this.elements.editor) {
+      console.log('Setting up editor event listeners for element:', this.elements.editor);
+      
       this.elements.editor.addEventListener('input', (e) => {
+        console.log('Input event triggered, value:', e.target.value);
         this.handleEditorInput(e.target.value);
       });
       
       this.elements.editor.addEventListener('keyup', (e) => {
+        console.log('Keyup event triggered, value:', e.target.value);
         this.handleEditorInput(e.target.value);
       });
       
       this.elements.editor.addEventListener('paste', (e) => {
+        console.log('Paste event triggered');
         // Handle paste with slight delay to get the pasted content
         setTimeout(() => {
+          console.log('Paste delayed handler, value:', e.target.value);
           this.handleEditorInput(e.target.value);
         }, 10);
       });
@@ -484,8 +517,15 @@ class MarkdownEditor {
    * Update application state
    */
   setState(newState) {
+    console.log('=== setState called ===');
+    console.log('Previous state:', this.state);
+    console.log('New state:', newState);
+    
     const prevState = { ...this.state };
     this.state = { ...this.state, ...newState };
+    
+    console.log('Updated state:', this.state);
+    console.log('Content changed:', this.state.content !== prevState.content);
     
     // Trigger re-render if needed
     this.render(prevState);
@@ -507,10 +547,17 @@ class MarkdownEditor {
    * Render application based on current state
    */
   render(prevState = {}) {
+    console.log('=== render called ===');
+    console.log('Previous state:', prevState);
+    console.log('Current state:', this.state);
+    
     // Update counters if content changed
     if (this.state.content !== prevState.content) {
+      console.log('Content changed, updating counters and preview');
       this.updateCounters();
       this.updatePreview();
+    } else {
+      console.log('Content not changed, skipping counter update');
     }
     
     // Update view mode if changed
@@ -566,9 +613,11 @@ class MarkdownEditor {
       // Load content
       const savedContent = this.storageManager.loadContent();
       if (savedContent) {
+        console.log('Loading saved content:', savedContent);
         this.setState({ content: savedContent });
         if (this.elements.editor) {
           this.elements.editor.value = savedContent;
+          console.log('Set editor value to:', savedContent);
         }
       }
       
@@ -592,8 +641,14 @@ class MarkdownEditor {
    * Handle editor input with debouncing
    */
   handleEditorInput(content) {
+    console.log('=== handleEditorInput called ===');
+    console.log('Content received:', content);
+    console.log('Current state content:', this.state.content);
+    
     // Update state immediately for counters
     this.setState({ content });
+    
+    console.log('State updated, new content:', this.state.content);
     
     // Debounce preview updates to prevent infinite loops
     this.debounce(() => {
@@ -4189,3 +4244,74 @@ window.addEventListener('unhandledrejection', (e) => {
 console.log('Markdown Editor application loaded successfully');
 console.log('Author: Шоназаров Аброр, группа 085 23');
 console.log('Variant: 17');
+
+// ===== GLOBAL TEST FUNCTIONS =====
+
+// Global function to test counters
+window.testCounters = function(testContent = 'ЗЕЛЛОУ') {
+  console.log('=== TESTING COUNTERS ===');
+  console.log('Test content:', testContent);
+  
+  if (window.markdownEditor) {
+    console.log('MarkdownEditor instance found');
+    
+    // Set content directly
+    window.markdownEditor.setState({ content: testContent });
+    
+    // Update editor value
+    if (window.markdownEditor.elements.editor) {
+      window.markdownEditor.elements.editor.value = testContent;
+      console.log('Set editor value to:', testContent);
+    }
+    
+    // Force counter update
+    window.markdownEditor.updateCounters();
+    
+    console.log('Current state:', window.markdownEditor.getState());
+  } else {
+    console.error('MarkdownEditor instance not found');
+  }
+};
+
+// Global function to check DOM elements
+window.checkCounterElements = function() {
+  console.log('=== CHECKING COUNTER ELEMENTS ===');
+  
+  const elements = {
+    'char-count': document.getElementById('char-count'),
+    'word-count': document.getElementById('word-count'),
+    'line-count': document.getElementById('line-count'),
+    'editor': document.getElementById('editor')
+  };
+  
+  for (const [id, element] of Object.entries(elements)) {
+    if (element) {
+      console.log(`✅ ${id}:`, element, 'Text:', element.textContent);
+    } else {
+      console.error(`❌ ${id}: not found`);
+    }
+  }
+  
+  return elements;
+};
+
+// Global function to simulate typing
+window.simulateTyping = function(text = 'ЗЕЛЛОУ') {
+  console.log('=== SIMULATING TYPING ===');
+  
+  const editor = document.getElementById('editor');
+  if (editor) {
+    editor.value = text;
+    editor.focus();
+    
+    // Trigger input event
+    const inputEvent = new Event('input', { bubbles: true });
+    editor.dispatchEvent(inputEvent);
+    
+    console.log('Simulated typing:', text);
+  } else {
+    console.error('Editor element not found');
+  }
+};
+
+console.log('Global test functions loaded: testCounters(), checkCounterElements(), simulateTyping()');
